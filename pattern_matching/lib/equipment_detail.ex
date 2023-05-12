@@ -26,6 +26,4 @@ defmodule EquipmentDetail do
   def item_details(_other) do
     raise "unknown item"
   end
-
-
 end
