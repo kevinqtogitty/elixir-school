@@ -11,11 +11,11 @@ defmodule ControlFlow do
     - load: int
 
   ## Examples
-    -iex> Guards.check_max_load(1) => "Safe to fly!"
+    -iex> ControlFlow.check_max_load(1) => "Safe to fly!"
 
-    -iex> Guards.check_max_load(100) => "Too heavy to fly!"
+    -iex> ControlFlow.check_max_load(100) => "Too heavy to fly!"
 
-    -iex> Guards.check_max_load(:100) => "Load arg must be type INT"
+    -iex> ControlFlow.check_max_load(:100) => "Load arg must be type INT"
   """
   def check_max_load(load) when not is_integer(load), do: "Load arg must be type INT"
   def check_max_load(load) do
@@ -31,11 +31,11 @@ defmodule ControlFlow do
     - percentage: number
 
   ## Examples
-    -iex> Guards.check_fuel_levels(100) => "Full tank"
+    -iex> ControlFlow.check_fuel_levels(100) => "Full tank"
 
-    -iex> Guards.check_fuel_levels(:100) => "Percentage must be a number!"
+    -iex> ControlFlow.check_fuel_levels(:100) => "Percentage must be a number!"
 
-    -iex> Guards.check_fuel_levels(0) => "empty tank"
+    -iex> ControlFlow.check_fuel_levels(0) => "empty tank"
   """
 
   def check_fuel_levels(percentage) when not is_number(percentage), do: "Percentage must be a number"
@@ -57,13 +57,13 @@ defmodule ControlFlow do
     - percentage: number
 
   ## Examples
-    -iex> Guards.error_code_check(200) => :ok
+    -iex> ControlFlow.error_code_check(200) => :ok
 
-    -iex> Guards.error_code_check(404) => :error
+    -iex> ControlFlow.error_code_check(404) => :error
 
-    -iex> Guards.error_code_check(204) => :no_content
+    -iex> ControlFlow.error_code_check(204) => :no_content
 
-    -iex> Guards.error_code_check("500") => :no_content
+    -iex> ControlFlow.error_code_check("500") => :no_content
   """
   def error_code_check(code) do
     case code do
@@ -86,28 +86,31 @@ defmodule ControlFlow do
     eg. {2, :kg, 3}
 
   ## Examples
-    -iex> Guards.equipment_check({2, :kg, 3}) => :equipment_cleared
+    -iex> ControlFlow.equipment_check({2, :kg, 3}) => :equipment_cleared
 
-    -iex> Guards.equipment_check({2, :lbs, 3}) => :equipment_cleared
+    -iex> ControlFlow.equipment_check({2, :lbs, 3}) => :equipment_cleared
 
-    -iex> Guards.equipment_check({50, :kg, 3}) => :failed
+    -iex> ControlFlow.equipment_check({50, :kg, 3}) => :failed
 
-    -iex> Guards.equipment_check({2, "kg", 3}) => "Unit type must be either :lbs or :kg"
+    -iex> ControlFlow.equipment_check({2, "kg", 3}) => "Unit type must be either :lbs or :kg"
 
-    -iex> Guards.equipment_check({"2", :kg, 3}) => "Weight must be an integer"
+    -iex> ControlFlow.equipment_check({"2", :kg, 3}) => "Weight must be an integer"
 
-    -iex> Guards.equipment_check({2, :kg}) => "Tuple must contain 3 arguments"
+    -iex> ControlFlow.equipment_check({2, :kg}) => "Tuple must contain 3 arguments"
   """
   def equipment_check(equipment_tuple) when tuple_size(equipment_tuple) != 3, do: "Tuple must contain 3 arguments"
   def equipment_check(equipment_tuple) do
     case equipment_tuple do
-      {weight, _unit_type, _quantity} when not is_integer(weight) -> "Weight must be an integer"
-      {_weight, unit_type, _quantity} when not is_atom(unit_type) -> "Unit type must be an atom"
-      {_weight, unit_type, _quantity} when not unit_type == :lbs or :kg -> "Unit type must be either :lbs or :kg"
-      {weight, unit_type, quantity} when unit_type == :kg ->
-        if weight / quantity < 16, do: :equipment_cleared, else: :failed
-      {weight, unit_type, quantity} when unit_type == :lbs ->
-        if convert_kg_to_lbs(weight) / quantity < 16, do: :equipment_cleared, else: :failed
+      {weight, _unit_type, _quantity} when not is_integer(weight)
+        -> "Weight must be an integer"
+      {_weight, unit_type, _quantity} when not is_atom(unit_type)
+        -> "Unit type must be an atom"
+      {_weight, unit_type, _quantity} when not unit_type == :lbs or :kg
+        -> "Unit type must be either :lbs or :kg"
+      {weight, unit_type, quantity} when unit_type == :kg
+        -> if weight / quantity < 16, do: :equipment_cleared, else: :failed
+      {weight, unit_type, quantity} when unit_type == :lbs
+        -> if convert_kg_to_lbs(weight) / quantity < 16, do: :equipment_cleared, else: :failed
       _ -> :unknown
     end
   end
